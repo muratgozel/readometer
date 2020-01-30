@@ -1,0 +1,2 @@
+# readometer
+Reading progress measurer.
