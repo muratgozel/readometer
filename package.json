@@ -1,6 +1,6 @@
 {
   "name": "readometer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The correct reading progress measurer.",
   "main": "dist/minified/index.js",
   "scripts": {
