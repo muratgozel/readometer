@@ -1,6 +1,6 @@
 {
   "name": "readometer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The correct reading progress measurer.",
   "main": "dist/minified/index.js",
   "scripts": {
@@ -34,7 +34,8 @@
     "@basekits/kit-object": "^1.0.1",
     "@basekits/kit-type": "^1.0.0",
     "@basekits/kit-validator": "^1.0.0",
-    "event-emitter-object": "^1.0.5"
+    "event-emitter-object": "^1.0.5",
+    "visibility-state-listener": "^1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",

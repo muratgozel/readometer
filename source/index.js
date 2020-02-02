@@ -1,4 +1,5 @@
 const EventEmitter = require('event-emitter-object')
+const createVisibilityStateListener = require('visibility-state-listener')
 const kit = require('@basekits/core')
 const kitType = require('@basekits/kit-type')
 const kitObject = require('@basekits/kit-object')
@@ -14,7 +15,6 @@ kit.addKit(kitDOM)
 kit.addKit(kitFn)
 
 const avgReadingSpeeds = require('./readingSpeedsByLanguage')
-const createVisibilityStateListener = require('./createVisibilityStateListener')
 
 function Readometer() {
   EventEmitter.call(this, {})
