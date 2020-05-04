@@ -1,20 +1,7 @@
-const EventEmitter = require('event-emitter-object')
-const createVisibilityStateListener = require('visibility-state-listener')
-const kit = require('@basekits/core')
-const kitType = require('@basekits/kit-type')
-const kitObject = require('@basekits/kit-object')
-const kitError = require('@basekits/kit-error')
-const kitValidator = require('@basekits/kit-validator')
-const kitDOM = require('@basekits/kit-dom')
-const kitFn = require('@basekits/kit-function')
-kit.addKit(kitType)
-kit.addKit(kitObject)
-kit.addKit(kitError)
-kit.addKit(kitValidator)
-kit.addKit(kitDOM)
-kit.addKit(kitFn)
-
-const avgReadingSpeeds = require('./readingSpeedsByLanguage')
+import EventEmitter from 'event-emitter-object'
+import createVisibilityStateListener from 'visibility-state-listener'
+import {domkit, typekit, objectkit, functionkit, validationkit} from 'basekits'
+import avgReadingSpeeds from './readingSpeedsByLanguage'
 
 function Readometer() {
   EventEmitter.call(this, {})
@@ -40,19 +27,19 @@ Readometer.prototype.clearMemory = function clearMemory(element) {
   this.absMilestones = []
   this.distance = this.getElementDistanceFromTop(this.element)
   this.hasScroll = null
-  this.viewport = kit.getViewportDimensions()
+  this.viewport = domkit.getViewportDimensions()
   this.lastTimestamp = 0
   this.timeInterval = null
 }
 
 Readometer.prototype.start = function start(element, language = 'default') {
-  if (!kit.isDOMElement(element)) return undefined
+  if (!typekit.isDOMElement(element)) return undefined
 
   // back to initial state
   this.clearMemory(element)
 
   // user should satisfy the target reading time based on average reading speed.
-  const avgSpeed = kit.getProp(avgReadingSpeeds, language, 'default')
+  const avgSpeed = objectkit.getProp(avgReadingSpeeds, language, 'default')
   const countWords = this.element.innerText.split(' ').filter(w => w.length > 1)
   this.targetReadingTime = Math.floor((countWords.length / avgSpeed) * 60) // in seconds
 
@@ -60,8 +47,8 @@ Readometer.prototype.start = function start(element, language = 'default') {
   const totalHeight = this.element.scrollHeight
   const visibleHeight = this.element.clientHeight
   this.hasScroll = totalHeight !== visibleHeight
-  const maxVisibleHeight = this.viewport.height < visibleHeight 
-    ? this.viewport.height 
+  const maxVisibleHeight = this.viewport.height < visibleHeight
+    ? this.viewport.height
     : visibleHeight
   const relDistance = this.hasScroll ? 0 : this.distance
   for (let i = 1; i <= Math.floor(totalHeight / maxVisibleHeight); i++) {
@@ -76,8 +63,8 @@ Readometer.prototype.start = function start(element, language = 'default') {
   this.onScroll()
 
   // measure the time which element stays inside the visible area
-  if (this.hasScroll) this.element.onscroll = kit.debounce(this.onScroll.bind(this), 300)
-  else window.onscroll = kit.debounce(this.onScroll.bind(this), 300)
+  if (this.hasScroll) this.element.onscroll = functionkit.debounce(this.onScroll.bind(this), 300)
+  else window.onscroll = functionkit.debounce(this.onScroll.bind(this), 300)
   this.timeInterval = setInterval(() => this.checkReadingTime(), 1000)
 
   return this
@@ -89,11 +76,11 @@ Readometer.prototype.onScroll = function onScroll() {
 
   // check the next reading milestone
   const pageScrollTop = document.documentElement.scrollTop || document.body.scrollTop || 0
-  const maxVisibleHeight = this.viewport.height < this.element.clientHeight 
-    ? this.viewport.height 
+  const maxVisibleHeight = this.viewport.height < this.element.clientHeight
+    ? this.viewport.height
     : this.element.clientHeight
-  const refScrollTop = this.hasScroll 
-    ? (this.element.scrollTop + maxVisibleHeight) 
+  const refScrollTop = this.hasScroll
+    ? (this.element.scrollTop + maxVisibleHeight)
     : (pageScrollTop + this.viewport.height)
   if (refScrollTop >= this.milestones[0]) {
     // milestone achieved
@@ -163,11 +150,11 @@ Readometer.prototype.getTimestamp = function getTimestamp() {
 Readometer.prototype.getElementDistanceFromTop = function getElementDistanceFromTop(element) {
   let distance = element.offsetTop
   let parent = element.parentElement
-  while ( kit.isNotEmpty(parent) ) {
+  while ( validationkit.isNotEmpty(parent) ) {
     distance += parent.offsetTop
     parent = parent.parentElement
   }
   return distance
 }
 
-module.exports = Readometer
+export default Readometer

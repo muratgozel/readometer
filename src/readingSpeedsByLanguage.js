@@ -1,6 +1,6 @@
 // average reading speeds (in words per minute) by language
 // reference: https://www.irisreading.com/average-reading-speed-in-various-languages/
-module.exports = {
+export default {
   default: 180,
   ar: 138,
   ch: 158,
